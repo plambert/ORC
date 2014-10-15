@@ -5,7 +5,7 @@ use warnings;
 use Parse::RecDescent;
 use Data::Dumper;
 use lib '.';
-use PRD;
+use DSL;
 
 # Enable warnings within the Parse::RecDescent module.
 $::RD_ERRORS = 1; # Make sure the parser dies when it encounters an error
