@@ -1,4 +1,4 @@
-package DSL;
+package DSL::Marpa;
 
 our $SELF;
 sub new { return $SELF }

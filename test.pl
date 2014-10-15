@@ -4,11 +4,11 @@ use strict;
 use Marpa::R2;
 use Data::Dumper;
 use lib '.';
-use DSL;
+use DSL::Marpa;
 
 my $grammar_text=join('', <DATA>);
 my $g = Marpa::R2::Scanless::G->new({
-        action_object  => 'DSL',
+        action_object  => 'DSL::Marpa',
         source         => \$grammar_text,
 });
 
