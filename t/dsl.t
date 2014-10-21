@@ -13,10 +13,10 @@ my @dsl_parse_tests=(
   "c=9+3; print c;",
   "c=9+3;\nprint c;\n",
   "c=9+3;y=c*2+1;print y;",
-);
-my @dsl_parse_tests_TODO=(
   "a=1d6;",
   "print 1d6;",
+);
+my @dsl_parse_tests_TODO=(
 );
 
 # plan tests => $plans + @dsl_parse_tests + @dsl_parse_tests_TODO;
