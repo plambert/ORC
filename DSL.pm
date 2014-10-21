@@ -12,6 +12,7 @@ use DSL::Variable;
 use DSL::Statement::Assignment;
 use DSL::Statement::Print;
 use DSL::Expression;
+use DSL::Number;
 
 has 'parser' => (
   is => 'ro',

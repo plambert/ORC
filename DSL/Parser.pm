@@ -43,7 +43,7 @@ factor:
 op_add: '+' | '-'
 op_multiply: '*' | '/'
 
-number: /\d+/ { DSL::Number->new($item[1]) }
+number: /\d+/ { DSL::Number->new(value => $item[1]) }
 
 END_OF_GRAMMAR
 
