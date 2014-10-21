@@ -4,7 +4,7 @@ package DSL::Expression;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 has 'expression' => (

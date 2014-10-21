@@ -4,7 +4,7 @@ package DSL::Variable;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 my $instance_cache={};

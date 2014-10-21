@@ -6,7 +6,7 @@ use warnings;
 package DSL;
 
 use Moose;
-use namespace::autoclean;
+use namespace::sweep;
 use Parse::RecDescent;
 use DSL::Parser;
 use DSL::Variable;

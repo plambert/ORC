@@ -4,7 +4,7 @@ package DSL::Number;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 has 'value' => (

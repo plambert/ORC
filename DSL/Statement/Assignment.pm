@@ -4,7 +4,7 @@ package DSL::Statement::Assignment;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 has 'variable' => (

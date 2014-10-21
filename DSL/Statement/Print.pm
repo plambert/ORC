@@ -4,7 +4,7 @@ package DSL::Statement::Print;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 has 'expressions' => (
