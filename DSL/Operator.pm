@@ -20,15 +20,26 @@ has 'arguments' => (
 sub from_parse {
   my $self=shift;
   my @terms;
-  print STDERR "Operator: ", Data::Dumper::Dumper(\@_);
   @terms=@{$_[0]}; shift;
+  if (@terms < 2) {
+    return $terms[0];
+  }
+  if (@terms == 3) {
+    return __PACKAGE__->new( operator=>$terms[1], arguments=>[$terms[0], $terms[2] ] );
+  }
+  my @args = (shift @terms);
+  my $op = shift @terms;
+  while($terms[1] eq $op) {
+    push @args, shift @terms;
+    shift @terms;
+  }
+  return __PACKAGE__->new( operator=>$op, arguments=>[ @args, __PACKAGE__->from_parse(@terms)] );
   
-  if (@$terms > 1) {
-    return __PACKAGE__->new( operator=>'=', arguments=>$terms);
-  }
-  else {
-    return $terms->[0];
-  }
+}
+
+sub prettyprint {
+  my $self=shift;
+  return join(" " . $self->operator . " ", map { $_->prettyprint } @{$self->arguments});
 }
 
 __PACKAGE__->meta->make_immutable;

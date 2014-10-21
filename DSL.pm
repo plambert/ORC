@@ -11,9 +11,10 @@ use DSL::Parser;
 use DSL::Variable;
 use DSL::Statement::Assignment;
 use DSL::Statement::Print;
-use DSL::Expression;
+# use DSL::Expression;
 use DSL::Number;
 use DSL::Operator;
+use DSL::Script;
 
 has 'parser' => (
   is => 'ro',

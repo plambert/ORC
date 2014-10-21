@@ -35,7 +35,6 @@ sub get {
     # class method
     my $class=shift;
     my $variable_name=shift;
-    # print STDERR "+ GET VARIABLE ", $variable_name, "\n";
     $instance_cache->{$variable_name} //= __PACKAGE__->new(name => $variable_name);
     return $instance_cache->{$variable_name};
   }
@@ -46,6 +45,11 @@ sub set {
   my $value=shift;
   $self->is_unset(0);
   $self->value($value);
+}
+
+sub prettyprint {
+  my $self=shift;
+  return $self->name;
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -12,6 +12,11 @@ has 'value' => (
   required => 1
 );
 
+sub prettyprint {
+  my $self=shift;
+  return $self->value;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

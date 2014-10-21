@@ -27,6 +27,11 @@ sub value {
   return $expressions[-1]->value;
 }
 
+sub prettyprint {
+  my $self=shift;
+  return "print " . join(', ', map { $_->prettyprint } (@{$self->expressions}) ) . ";\n";
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -20,16 +20,16 @@ STDOUT->autoflush(1);
 my $dsl=DSL->new;
 
 my @tests=(
-  "a=7;\nb =6\n;c = a + b;\nprint a;",
+  "a=7;\nb =6\n;c = a + b;\nprint a;\nprint a+b; print c*a; print a+b*c;\n",
 );
 
 for my $test (0..$#tests) {
   print  "==========\n";
-  printf "%2d: %-60.60s\n", 1+$test, quotestring($tests[$test]);
+  printf "Test %2d:\n%s\n", 1+$test, $tests[$test];
   print  "----------\n";
   my $result=$dsl->parse($tests[$test]);
   die "Cannot parse test " . ($test+1) . "\n" unless (defined($result));
-  print Dumper($result);
+  # print Dumper($result);
   print $result->prettyprint;
 }
 

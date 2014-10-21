@@ -11,7 +11,7 @@ use Carp;
 
 our $grammar=<<'END_OF_GRAMMAR';
 
-start: statement(s) /^\Z/ { $return=$item{'statement(s)'} }
+start: statement(s) /^\Z/ { DSL::Script->new(statements => $item{'statement(s)'}) }
 
 statement: 
   print_statement eos { $item[1] }
@@ -33,7 +33,6 @@ variable:
 
 expression: <leftop: term ('+' | '-') term>
   { 
-    print STDERR "EXPRESSIONS: ", Data::Dumper::Dumper(\@item);
     my $expressions=$item[1];
     if (ref $expressions ne 'ARRAY') {
       $return=$expressions;
@@ -47,12 +46,10 @@ expression: <leftop: term ('+' | '-') term>
     else {
       $return=DSL::Operator->from_parse($expressions);
     }
-    print STDERR "RESULT: ", Data::Dumper::Dumper($return);
   }
 
 term: <leftop: factor ('*' | '/') factor>
   {
-    print STDERR "TERMS: ", Data::Dumper::Dumper(\@item);
     my $expressions=$item[1];
     if (ref $expressions ne 'ARRAY') {
       $return=$expressions;
@@ -66,7 +63,6 @@ term: <leftop: factor ('*' | '/') factor>
     else {
       $return=DSL::Operator->from_parse($expressions);
     }
-    print STDERR "TERMS: ", Data::Dumper::Dumper($return);
   }
 
 factor:

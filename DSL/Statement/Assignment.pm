@@ -22,6 +22,11 @@ sub value {
   $self->variable->set($self->expression->value);
 }
 
+sub prettyprint {
+  my $self=shift;
+  return sprintf("%s = %s;\n", $self->variable->prettyprint, $self->expression->prettyprint);
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
