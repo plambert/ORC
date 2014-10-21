@@ -53,6 +53,11 @@ sub prettyprint {
   return $self->name;
 }
 
+sub do {
+  my $self=shift;
+  return ( ref $self->value and $self->value->can('do')) ? $self->value->do : $self->value;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use namespace::sweep;
 use Moose;
-use overload '""' => sub { $_[0]->value };
+use overload '""' => sub { $_[0]->value }, '0+' => sub { $_[0]->value };
 
 has 'value' => (
   is => 'rw',

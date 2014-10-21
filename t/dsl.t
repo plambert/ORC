@@ -29,23 +29,20 @@ isa_ok($dsl, "DSL");
 
 dsl_parse_test(@dsl_parse_tests);
 
+is(0+$dsl->parse('print 7;')->do, 7, "print 7 gives 7");
+is(0+$dsl->parse('print 1+1;')->do, 2, "print 1+1 gives 2");
+is(0+$dsl->parse('print 1+2*3;')->do, 7, "print 1+2*3 gives 7");
+
 TODO: {
   local $TODO='not yet implemented';
   dsl_parse_test(@dsl_parse_tests_TODO);
-  is(0+$dsl->parse('print 7;')->do, 7, "print 7 gives 7");
+  is(0+$dsl->parse('a=7;print a;')->do, 7, "a=7; print 7 gives 7");
 }
 
 sub dsl_parse_test {
-  my ($string, $compressed_string, $result, $compressed_result, $todo);
+  my ($string, $compressed_string, $result, $compressed_result);
   while(@_) {
-    if (ref $_[0]) {
-      $todo=1;
-      $string=shift->[0];
-    }
-    else {
-      $todo=0;
-      $string=shift;
-    }
+    $string=shift;
     
     $compressed_string=$string;
     $compressed_string=~s{\s+}{}g;
@@ -58,14 +55,7 @@ sub dsl_parse_test {
     $compressed_result =~ s{\s+}{}g;
     $string=~s{\n}{\\n}g;
     $string=~s{\t}{\\t}g;
-    if ($todo) {
-      TODO: {
-        ok($compressed_string eq $compressed_result, "parse: $string") or diag("returned: ", $result);
-      }
-    }
-    else {
-      ok($compressed_string eq $compressed_result, "parse: $string") or diag("returned: ", $result);
-    }
+    ok($compressed_string eq $compressed_result, "parse: $string") or diag("returned: ", $result);
   }
 }
 

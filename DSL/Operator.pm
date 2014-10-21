@@ -52,7 +52,7 @@ sub do {
     '/' => sub { my $v=shift; $v /= shift while (@_); return $v; },
   };
   if (exists $op_fun->{$self->operator}) {
-    $value = $op_fun->{$self->operator}->(map { $_->do } @{$self->arguments} );
+    $value = $op_fun->{$self->operator}->(map { $_->can('do') ? $_->do : $_ } @{$self->arguments} );
     return $value;
   }
   else {
