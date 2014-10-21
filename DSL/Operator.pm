@@ -4,7 +4,7 @@ package DSL::Operator;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::sweep;
 use Moose;
 
 has 'operator' => (
@@ -40,6 +40,24 @@ sub from_parse {
 sub prettyprint {
   my $self=shift;
   return join(" " . $self->operator . " ", map { $_->prettyprint } @{$self->arguments});
+}
+
+sub do {
+  my $self=shift;
+  my $value;
+  my $op_fun={
+    '+' => sub { my $v=shift; $v += shift while (@_); return $v; },
+    '-' => sub { my $v=shift; $v -= shift while (@_); return $v; },
+    '*' => sub { my $v=shift; $v *= shift while (@_); return $v; },
+    '/' => sub { my $v=shift; $v /= shift while (@_); return $v; },
+  };
+  if (exists $op_fun->{$self->operator}) {
+    $value = $op_fun->{$self->operator}->(map { $_->do } @{$self->arguments} );
+    return $value;
+  }
+  else {
+    die sprintf("%s: %s: unknown operator!", $0, $self->operator);
+  }
 }
 
 __PACKAGE__->meta->make_immutable;

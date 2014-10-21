@@ -18,9 +18,31 @@ has 'pips' => (
   required => 1,
 );
 
+has 'last_total' => (
+  is => 'ro',
+);
+
+has 'last_results' => (
+  is => 'ro',
+);
+
 sub prettyprint {
   my $self=shift;
   return sprintf("%d%s%d", $self->count, 'd', $self->pips);
+}
+
+sub do {
+  my $self=shift;
+  my @results;
+  my $total=0;
+  for (1..$self->count) {
+    my $result=int(rand()*$self->pips)+1;
+    push @results, $result;
+    $total += $result;
+  }
+  $self->last_total($total);
+  $self->last_results(\@results);
+  return $total;
 }
 
 __PACKAGE__->meta->make_immutable;

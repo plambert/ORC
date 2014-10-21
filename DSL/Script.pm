@@ -18,6 +18,15 @@ sub prettyprint {
   return join('', map { $_->prettyprint } @{$self->statements});
 }
 
+sub do {
+  my $self=shift;
+  my $response;
+  for my $statement (@{$self->statements}) {
+    $response = $statement->do;
+  }
+  return $response;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

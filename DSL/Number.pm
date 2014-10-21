@@ -18,6 +18,11 @@ sub prettyprint {
   return $self->value;
 }
 
+sub do {
+  my $self=shift;
+  return $self->value;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -32,6 +32,7 @@ dsl_parse_test(@dsl_parse_tests);
 TODO: {
   local $TODO='not yet implemented';
   dsl_parse_test(@dsl_parse_tests_TODO);
+  is(0+$dsl->parse('print 7;')->do, 7, "print 7 gives 7");
 }
 
 sub dsl_parse_test {

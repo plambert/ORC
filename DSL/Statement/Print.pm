@@ -32,6 +32,17 @@ sub prettyprint {
   return "print " . join(', ', map { $_->prettyprint } (@{$self->expressions}) ) . ";\n";
 }
 
+sub do {
+  my $self=shift;
+  my @results;
+  for my $expression (@{$self->expressions}) {
+    my $result=$expression->do;
+    push @results, $result;
+    # print $result;
+  }
+  return join(", ", @results) . "\n";
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
