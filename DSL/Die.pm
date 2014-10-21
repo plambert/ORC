@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use namespace::sweep;
 use Moose;
+use overload '""' => sub { $_[0]->prettyprint };
 
 has 'count' => (
   is => 'rw',
