@@ -15,30 +15,40 @@ has 'expression' => (
 sub from_parse {
   my $self=shift;
   shift;
+  print STDERR "Expression start: ", Data::Dumper::Dumper(\@_), "\n";
   my @expression;
   if (ref $_[0] eq 'ARRAY') {
     my $arg=shift;
+    print STDERR "Expression: deref: ", Data::Dumper::Dumper($arg);
     if (ref $arg->[0] eq 'ARRAY') {
       @expression=@{$arg->[0]} or die "ruh-roh!";
     }
     else {
-      @expression=($arg->[0]);
+      @expression=@$arg;
     }
   }
   else {
     @expression=@_;
   }
+  print STDERR "Expression during parse: ", Data::Dumper::Dumper(\@expression), "\n";
   if (@expression > 2) {
     my $idx=0;
     while($idx<=$#expression-1) {
       @expression[$idx+1,$idx] = @expression[$idx,$idx+1];
       $idx += 2;
     }
+    print STDERR "Expression end (complex): ", Data::Dumper::Dumper(\@expression), "\n";
     return DSL::Expression->new(expression => \@expression)
   }
   else {
+    print STDERR "Expression end (simple): ", Data::Dumper::Dumper($expression[0]), "\n";
     return $expression[0];
   }
+}
+
+sub prettyprint {
+  my $self=shift;
+  
 }
 
 __PACKAGE__->meta->make_immutable;

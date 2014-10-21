@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Variable;
+package DSL::Number;
 
 use strict;
 use warnings;
@@ -9,9 +9,9 @@ use Moose;
 
 has 'value' => (
   is => 'rw',
-  required => 1,
+  required => 1
 );
 
-# __PACKAGE__->meta->make_immutable;
+__PACKAGE__->meta->make_immutable;
 
 1;

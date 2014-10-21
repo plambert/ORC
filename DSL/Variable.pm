@@ -35,7 +35,7 @@ sub get {
     # class method
     my $class=shift;
     my $variable_name=shift;
-    print STDERR "+ GET VARIABLE ", $variable_name, "\n";
+    # print STDERR "+ GET VARIABLE ", $variable_name, "\n";
     $instance_cache->{$variable_name} //= __PACKAGE__->new(name => $variable_name);
     return $instance_cache->{$variable_name};
   }
