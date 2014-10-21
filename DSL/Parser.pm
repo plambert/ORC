@@ -66,9 +66,12 @@ term: <leftop: factor ('*' | '/') factor>
   }
 
 factor:
-  number
+  dieSimple
+| number
 | variable
 | '(' expression ')' { $item[2] }
+
+dieSimple: <skip:''> number 'd' number { DSL::Die->new(count => $item[2], pips => $item[4]); }
 
 number: /\d+/ { DSL::Number->new(value => $item[1]) }
 

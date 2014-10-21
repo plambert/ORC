@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use Parse::RecDescent;
 use Data::Dumper;
 use lib '.';
 use DSL;

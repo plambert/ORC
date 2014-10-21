@@ -7,6 +7,7 @@ package DSL;
 
 use Moose;
 use namespace::autoclean;
+use Parse::RecDescent;
 use DSL::Parser;
 use DSL::Variable;
 use DSL::Statement::Assignment;
@@ -15,6 +16,7 @@ use DSL::Statement::Print;
 use DSL::Number;
 use DSL::Operator;
 use DSL::Script;
+use DSL::Die;
 
 has 'parser' => (
   is => 'ro',
