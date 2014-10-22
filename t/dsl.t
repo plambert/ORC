@@ -2,8 +2,9 @@ use warnings;
 use strict;
 use Test::More;
 
-# my $plans=3;
+our $dsl;
 
+# test loading our module at compile-time
 BEGIN { use_ok('DSL'); }
 
 my @dsl_parse_tests=(
@@ -15,35 +16,49 @@ my @dsl_parse_tests=(
   "c=9+3;y=c*2+1;print y;",
   "a=1d6;",
   "print 1d6;",
+  "print 3d6;",
+  "print 4d6d1;",
+  "TODO[[see if this passes]] print 1;\n\nprint 2;\n\n\n",
 );
-my @dsl_parse_tests_TODO=(
+
+my @dsl_value_tests=(
+  "print 1;\n"                  => 1,
+  "print 7;"                    => 7,
+  "print 1+1;"                  => 2,
+  "print 1+2*3;"                 => 7,
+  "a=7;print a;"                => 7,
+  "print 3d6;"                  => 9,
+  "print 3d6;"                  => 9,
+  "print 1d6+1d6;"              => 8,
 );
 
 # plan tests => $plans + @dsl_parse_tests + @dsl_parse_tests_TODO;
 
-can_ok('DSL', 'new');
+subtest 'Basic module loading' => sub {
+  plan tests => 2;
+  can_ok('DSL', 'new');
+  $dsl=DSL->new;
+  isa_ok($dsl, "DSL");
+};
 
-our $dsl=DSL->new;
+subtest 'Parsing tests' => sub {
+  plan tests => scalar(@dsl_parse_tests);
+  dsl_parse_test(@dsl_parse_tests);
+};
 
-isa_ok($dsl, "DSL");
-
-dsl_parse_test(@dsl_parse_tests);
-
-is(0+$dsl->parse('print 7;')->do, 7, "print 7 gives 7");
-is(0+$dsl->parse('print 1+1;')->do, 2, "print 1+1 gives 2");
-is(0+$dsl->parse('print 1+2*3;')->do, 7, "print 1+2*3 gives 7");
-
-TODO: {
-  local $TODO='not yet implemented';
-  dsl_parse_test(@dsl_parse_tests_TODO);
-  is(0+$dsl->parse('a=7;print a;')->do, 7, "a=7; print 7 gives 7");
-}
+dsl_value_test(@dsl_value_tests);
 
 sub dsl_parse_test {
   my ($string, $compressed_string, $result, $compressed_result);
   while(@_) {
+    local $TODO;
     $string=shift;
-    
+    if ($string =~ s{^TODO\[\[(.*?)\]\]\s*}{}) {
+      $TODO = $1;
+    }
+    else {
+      undef $TODO;
+    }
     $compressed_string=$string;
     $compressed_string=~s{\s+}{}g;
     $result=$dsl->parse($string);
@@ -56,6 +71,28 @@ sub dsl_parse_test {
     $string=~s{\n}{\\n}g;
     $string=~s{\t}{\\t}g;
     ok($compressed_string eq $compressed_result, "parse: $string") or diag("returned: ", $result);
+  }
+}
+
+sub dsl_value_test {
+  my $index=1;
+  while(@_ > 1) {
+    my ($string, $expected) = (shift, shift);
+    subtest "Value test #" . $index => sub {
+      local $TODO;
+      plan tests => 3;
+      if ($string =~ s{^TODO\[\[(.*?)\]\]\s*}{}) {
+        $TODO = $1;
+      }
+      else {
+        undef $TODO;
+      }
+      srand(42);
+      ok(my $parsed=$dsl->parse($string), "Random test #" . $index. " parses correctly");
+      isa_ok($parsed, "DSL::Script", "Parsed script is a DSL script");
+      is(0+$parsed->do, $expected, "Random test #" . $index . " returns " . $expected);
+    };
+    $index++;
   }
 }
 
