@@ -66,12 +66,22 @@ term: <leftop: factor ('*' | '/') factor>
   }
 
 factor:
-  dieSimple
+  dieExpression
 | number
 | variable
 | '(' expression ')' { $item[2] }
 
-dieSimple: <skip:''> number 'd' number { DSL::Die->new(count => $item[2], pips => $item[4]); }
+dieExpression:
+  <skip:''> number 'd' number 'd'  number { DSL::Die->new(count => $item[2], pips => $item[4], drop => $item[6]             ) }
+| <skip:''> number 'd' number 'k'  number { DSL::Die->new(count => $item[2], pips => $item[4], keep => $item[6]             ) }
+| <skip:''> number 'd' number 'r'  number { DSL::Die->new(count => $item[2], pips => $item[4], reroll => $item[6]           ) }
+| <skip:''> number 'd' number 's'  number { DSL::Die->new(count => $item[2], pips => $item[4], success => $item[6]          ) }
+| <skip:''> number 'd' number 'es' number { DSL::Die->new(count => $item[2], pips => $item[4], explodingsuccess => $item[6] ) }
+| <skip:''> number 'd' number 'e'         { DSL::Die->new(count => $item[2], pips => $item[4], explode => 1                 ) }
+| <skip:''> number 'd' number 'o'         { DSL::Die->new(count => $item[2], pips => $item[4], open => 1                    ) }
+| <skip:''> number 'd' number             { DSL::Die->new(count => $item[2], pips => $item[4]                               ) }
+
+# drop, keep, reroll, success
 
 number: /\d+/ { DSL::Number->new(value => $item[1]) }
 
