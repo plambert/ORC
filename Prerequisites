@@ -1,0 +1,4 @@
+Test::Continuous
+Carp::Always
+namespace::sweep
+Moose
