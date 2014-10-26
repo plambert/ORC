@@ -24,11 +24,11 @@ print_statement:
   /print\s/ expression(s /,/) { "DSL::Statement::Print"->new(expressions => $item[2]) }
 
 assignment_statement:
-  variable equals expression { "DSL::Statement::Assignment"->new(variable => $item{variable}, expression => $item{expression}) }
+  identifier equals expression { "DSL::Statement::Assignment"->new(variable => $item{identifier}, expression => $item{expression}) }
 
 equals: '='
 
-variable:
+identifier:
   /(?!=print[^a-zA-Z0-9_])[a-zA-Z_][a-zA-Z0-9_]*/ { "DSL::Variable"->get($item[1]) }
 
 expression: <leftop: term ('+' | '-') term>
@@ -68,7 +68,7 @@ term: <leftop: factor ('*' | '/') factor>
 factor:
   dieExpression
 | number
-| variable
+| identifier
 | '(' expression ')' { $item[2] }
 
 dieExpression:

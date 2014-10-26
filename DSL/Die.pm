@@ -36,6 +36,7 @@ has 'final_dice' => (
 
 has 'removed_dice' => (
   is => 'rw',
+  default => sub { return {}; },
 );
 
 has 'drop' => (
@@ -117,19 +118,20 @@ sub dropDice {
   my $self = shift;
   $self->rollRaw unless ($self->raw_dice and @{$self->raw_dice});
   my @rolled_dice=@{$self->raw_dice};
-  my $drop=0+$self->drop;
+  # print STDERR Data::Dumper::Dumper($self->drop); use Data::Dumper;
+  my $drop=0+$self->drop->value;
   if (defined $drop and $drop > 0) {
   
     my @sorted_dice=sort { $a <=> $b } (@rolled_dice);
     my @values_to_remove=@sorted_dice[0..($drop-1)];
-    print STDERR "rolled_dice: ", join(',', @rolled_dice), "\n";
-    print STDERR "sorted dice: ", join(',', @sorted_dice), "\n";
+    # print STDERR "rolled_dice: ", join(',', @rolled_dice), "\n";
+    # print STDERR "sorted dice: ", join(',', @sorted_dice), "\n";
     for my $value (@values_to_remove) {
       my $idx=0;
       $idx++ until $rolled_dice[$idx] == $value;
       splice(@rolled_dice, $idx, 1);
     }
-    print STDERR "final dice: ", join(',', @rolled_dice), "\n";
+    # print STDERR "final dice: ", join(',', @rolled_dice), "\n";
     $self->removed_dice->{dropped}=\@values_to_remove;
   }
   $self->final_dice(\@rolled_dice);

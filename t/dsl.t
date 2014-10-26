@@ -1,7 +1,8 @@
 use warnings;
 use strict;
-use Test::More;
+use Test::More tests => 4;
 use Carp::Always;
+use Test::LongString;
 
 our $dsl;
 
@@ -20,6 +21,7 @@ my @dsl_parse_tests=(
   "print 1d6;",
   "print 3d6;",
   "print 4d6d1;",
+  "[[!]]print",
 );
 
 my @dsl_value_tests=(
@@ -31,6 +33,7 @@ my @dsl_value_tests=(
   "[[EXPECT 9]]print 3d6;",
   "[[EXPECT 9]]print 3d6;",
   "[[EXPECT 8]]print 1d6+1d6;",
+  "[[EXPECT 11]]print 4d6d1;",
 );
 
 subtest 'Basic module loading' => sub {
@@ -51,7 +54,7 @@ subtest 'Value tests' => sub {
 };
 
 sub dsl_parse_test {
-  my ($string, $opts, $expected, $parse_result);
+  my ($string, $opts, $result, $parse_result);
   my $index=1;
   while(@_) {
     ($string, $opts)=determine_test(shift, name_pattern => "parse '%f'");
@@ -59,15 +62,15 @@ sub dsl_parse_test {
       local $TODO = $opts->{todo} if (defined($opts->{todo}));
       $parse_result=$dsl->parse($string);
       if (!defined($parse_result)) {
-        $expected='UNDEF';
+        $result='UNDEF';
       }
       elsif (ref $parse_result and $parse_result->can('prettyprint')) {
-        $expected=$parse_result->prettyprint;
+        $result=$parse_result->prettyprint;
       }
       else {
-        $expected="$parse_result";
+        $result="$parse_result";
       }
-      is(compress_whitespace($string), compress_whitespace($expected), "parse: " . flatten_string($string)) or diag("returned: ", $parse_result);
+      is_string_nows($result, $string, "parse: " . flatten_string($string)) or diag("returned: ", $parse_result);
     };
     $index++;
   }
