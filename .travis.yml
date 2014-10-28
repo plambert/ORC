@@ -5,4 +5,5 @@ perl:
   - "5.16"
   - "5.14"
   - "5.12"
+install: build/install_modules.sh
 
