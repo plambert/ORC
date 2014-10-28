@@ -1,4 +1,4 @@
 #!/bin/bash
 
-xargs cpanm < Prerequisites
+grep -v Test::Continuous Prerequisites | xargs cpanm
 
