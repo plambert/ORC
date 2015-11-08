@@ -1,8 +1,7 @@
 #!/usr/bin/perl -w
 
+use Modern::Perl qw/2012/;
 use lib '.';
-use strict;
-use warnings;
 use DSL;
 
 my $file;

@@ -2,8 +2,7 @@
 
 package DSL::Variable;
 
-use strict;
-use warnings;
+use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
 use overload '""' => sub { $_[0]->prettyprint };

@@ -2,8 +2,7 @@
 
 package DSL::Operator;
 
-use strict;
-use warnings;
+use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
 

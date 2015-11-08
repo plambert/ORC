@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
 
-use strict;
-use warnings;
+use Modern::Perl qw/2012/;
 
 package DSL::Parser;
 

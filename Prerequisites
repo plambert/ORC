@@ -4,3 +4,4 @@ namespace::sweep
 Moose
 Test::LongString
 Parse::RecDescent
+Modern::Perl
