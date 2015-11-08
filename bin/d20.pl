@@ -24,11 +24,11 @@ while(@ARGV and $ARGV[0] =~ /^-/) {
 
 usage("no files to run") unless (@ARGV);
 
-for $file (@ARGV) {
+for my $file (@ARGV) {
   print "=== $file\n" if (@ARGV>1);
-  open(FILE, '<', $file) or die "$0: ${file}: unable to open file for reading\n";
-  my $script=do { local $/; <FILE> };
-  close(FILE);
+  open(my $fh, '<', $file) or die "$0: ${file}: unable to open file for reading\n";
+  my $script=do { local $/; <$fh> };
+  close($fh);
   my $parsed_script=$dsl->parse($script);
   die "$0: ${file}: parsing failed\n" unless (defined($parsed_script));
   print $parsed_script->do;
