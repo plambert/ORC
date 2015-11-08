@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Die;
+package ORC::Die;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;

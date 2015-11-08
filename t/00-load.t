@@ -1,7 +1,6 @@
-#!perl -T
-use 5.014;
-use strict;
-use warnings;
+#!/usr/bin/env perl
+
+use Modern::Perl qw/2012/;
 use Test::More;
 
 plan tests => 1;

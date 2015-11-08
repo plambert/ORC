@@ -2,21 +2,21 @@
 
 use Modern::Perl qw/2012/;
 
-package DSL;
+package ORC;
 
+our $VERSION='0.30';
 use Moose;
 use namespace::sweep;
 use Parse::RecDescent;
-use DSL::Parser;
-use DSL::Variable;
-use DSL::Statement::Assignment;
-use DSL::Statement::Print;
-# use DSL::Expression;
-use DSL::Number;
-use DSL::Operator;
-use DSL::Script;
-use DSL::Die;
-
+use ORC::Parser;
+use ORC::Variable;
+use ORC::Statement::Assignment;
+use ORC::Statement::Print;
+# use ORC::Expression;
+use ORC::Number;
+use ORC::Operator;
+use ORC::Script;
+use ORC::Die;
 
 has 'parser' => (
   is => 'ro',
@@ -25,7 +25,7 @@ has 'parser' => (
 );
 
 sub _default_parser {
-  return DSL::Parser->new;
+  return ORC::Parser->new;
 }
 
 sub run {

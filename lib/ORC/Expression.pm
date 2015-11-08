@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Expression;
+package ORC::Expression;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;
@@ -37,7 +37,7 @@ sub from_parse {
       $idx += 2;
     }
     print STDERR "Expression end (complex): ", Data::Dumper::Dumper(\@expression), "\n";
-    return DSL::Expression->new(expression => \@expression)
+    return ORC::Expression->new(expression => \@expression)
   }
   else {
     print STDERR "Expression end (simple): ", Data::Dumper::Dumper($expression[0]), "\n";

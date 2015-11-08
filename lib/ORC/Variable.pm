@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Variable;
+package ORC::Variable;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;
@@ -28,7 +28,7 @@ sub get {
   if (ref $_[0]) {
     # instance method
     my $self=shift;
-    warn "DSL: '" . $self->name . "' is unset\n" unless ($self->is_unset);
+    warn "ORC: '" . $self->name . "' is unset\n" unless ($self->is_unset);
     return $self->value;
   }
   else {

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Statement::Assignment;
+package ORC::Statement::Assignment;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Script;
+package ORC::Script;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;

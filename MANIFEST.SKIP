@@ -1,0 +1,5 @@
+\.git
+\.travis\.yml
+meta
+_build
+Build

@@ -2,10 +2,10 @@
 
 use Modern::Perl qw/2012/;
 use lib '.';
-use DSL;
+use ORC;
 
 my $file;
-my $dsl=DSL->new;
+my $orc=ORC->new;
 my $debug;
 
 while(@ARGV and $ARGV[0] =~ /^-/) {
@@ -28,7 +28,7 @@ for my $file (@ARGV) {
   open(my $fh, '<', $file) or die "$0: ${file}: unable to open file for reading\n";
   my $script=do { local $/; <$fh> };
   close($fh);
-  my $parsed_script=$dsl->parse($script);
+  my $parsed_script=$orc->parse($script);
   die "$0: ${file}: parsing failed\n" unless (defined($parsed_script));
   print $parsed_script->do;
 }

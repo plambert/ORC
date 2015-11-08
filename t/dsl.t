@@ -3,12 +3,12 @@ use Test::More tests => 4;
 use Carp::Always;
 use Test::LongString;
 
-our $dsl;
+our $orc;
 
 # test loading our module at compile-time
-BEGIN { use_ok('DSL'); }
+BEGIN { use_ok('ORC'); }
 
-my @dsl_parse_tests=(
+my @orc_parse_tests=(
   "print 7;",
   "print 7;\n",
   "print 1;\n\nprint 2;\n\n\n",
@@ -23,7 +23,7 @@ my @dsl_parse_tests=(
   "[[!]]print",
 );
 
-my @dsl_value_tests=(
+my @orc_value_tests=(
   "[[EXPECT 1]]print 1;\n",
   "[[EXPECT 7]]print 7;",
   "[[EXPECT 2]]print 1+1;",
@@ -37,29 +37,29 @@ my @dsl_value_tests=(
 
 subtest 'Basic module loading' => sub {
   plan tests => 2;
-  can_ok('DSL', 'new');
-  $dsl=DSL->new;
-  isa_ok($dsl, "DSL");
+  can_ok('ORC', 'new');
+  $orc=ORC->new;
+  isa_ok($orc, "ORC");
 };
 
 subtest 'Parsing tests' => sub {
-  plan tests => scalar(@dsl_parse_tests);
-  dsl_parse_test(@dsl_parse_tests);
+  plan tests => scalar(@orc_parse_tests);
+  orc_parse_test(@orc_parse_tests);
 };
 
 subtest 'Value tests' => sub {
-  plan tests => scalar(@dsl_value_tests);
-  dsl_value_test(@dsl_value_tests);
+  plan tests => scalar(@orc_value_tests);
+  orc_value_test(@orc_value_tests);
 };
 
-sub dsl_parse_test {
+sub orc_parse_test {
   my ($string, $opts, $result, $parse_result);
   my $index=1;
   while(@_) {
     ($string, $opts)=determine_test(shift, name_pattern => "parse '%f'");
     subtest $index . ": [" . flatten_string($string) . "]" => sub {
       local $TODO = $opts->{todo} if (defined($opts->{todo}));
-      $parse_result=$dsl->parse($string);
+      $parse_result=$orc->parse($string);
       if (!defined($parse_result)) {
         $result='UNDEF';
       }
@@ -80,7 +80,7 @@ sub dsl_parse_test {
   }
 }
 
-sub dsl_value_test {
+sub orc_value_test {
   my $index=1;
   while(@_ > 0) {
     my ($string, $opts) = determine_test(shift);
@@ -89,8 +89,8 @@ sub dsl_value_test {
       local $TODO = $opts->{todo} if ($opts->{todo});
       plan tests => 3;
       srand(42);
-      ok(my $parsed=$dsl->parse($string), "Random test #" . $index. " parses correctly");
-      isa_ok($parsed, "DSL::Script", "Parsed script is a DSL script");
+      ok(my $parsed=$orc->parse($string), "Random test #" . $index. " parses correctly");
+      isa_ok($parsed, "ORC::Script", "Parsed script is an ORC script");
       is(0+$parsed->do, $opts->{expect}, "Random test #" . $index . " returns " . $opts->{expect});
     };
     $index++;

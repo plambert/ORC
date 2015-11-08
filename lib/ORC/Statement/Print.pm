@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Statement::Print;
+package ORC::Statement::Print;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;

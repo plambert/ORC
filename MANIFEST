@@ -1,9 +1,24 @@
+bin/d20.pl
 Build.PL
 Changes
 lib/ORC.pm
+lib/ORC/Die.pm
+lib/ORC/Expression.pm
+lib/ORC/Number.pm
+lib/ORC/Operator.pm
+lib/ORC/Parser.pm
+lib/ORC/Script.pm
+lib/ORC/Statement/Assignment.pm
+lib/ORC/Statement/Print.pm
+lib/ORC/Variable.pm
+LICENSE
 MANIFEST			This list of files
-README
+Prerequisites
+README.md
 t/00-load.t
+t/dsl.t
 t/manifest.t
-t/pod-coverage.t
-t/pod.t
+t/test.d20
+MANIFEST.SKIP
+MYMETA.json
+MYMETA.yml

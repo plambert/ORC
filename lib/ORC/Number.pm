@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package DSL::Number;
+package ORC::Number;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;
