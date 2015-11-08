@@ -17,8 +17,8 @@ Prerequisites
 README.md
 t/00-load.t
 t/dsl.t
-t/manifest.t
 t/test.d20
 MANIFEST.SKIP
-MYMETA.json
-MYMETA.yml
+META.yml
+Makefile.PL
+META.json
