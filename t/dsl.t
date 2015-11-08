@@ -70,7 +70,12 @@ sub dsl_parse_test {
       else {
         $result="$parse_result";
       }
-      is_string_nows($result, $string, "parse: " . flatten_string($string)) or diag("returned: ", $parse_result);
+      if ($opts->{fail}) {
+        isnt($result, $string, "parse: " . flatten_string($string)) or diag("returned: ", $parse_result);
+      }
+      else {
+        is_string_nows($result, $string, "parse: " . flatten_string($string)) or diag("returned: ", $parse_result);
+      }
     };
     $index++;
   }
