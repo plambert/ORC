@@ -3,3 +3,4 @@ Carp::Always
 namespace::sweep
 Moose
 Test::LongString
+Parse::RecDescent
