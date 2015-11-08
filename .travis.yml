@@ -6,6 +6,9 @@ perl:
   - "5.16"
   - "5.14"
   - "5.12"
+matrix:
+   allow_failures:
+      - perl: "5.22"
 install: "build/install_modules.sh"
 script: prove
 sudo: false
