@@ -9,4 +9,14 @@ perl:
 install: "build/install_modules.sh"
 script: prove
 sudo: false
+notifications:
+  pushover:
+    api_key: "a9JEehJdt2vNqUcWYf8GMpcyF7tAMg"
+    users:
+      "hK8qbunPrKx2Kkkh7j4rnOv7AWZmmE"
+  email:
+    recipients:
+      "plambert@plambert.net"
+    on_success: always
+    on_failure: always
 
