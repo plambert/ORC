@@ -8,7 +8,7 @@ perl:
 matrix:
    allow_failures:
       - perl: "5.22"
-script: prove
+script: "prove -l"
 sudo: false
 notifications:
   pushover:
