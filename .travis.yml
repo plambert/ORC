@@ -7,4 +7,5 @@ perl:
   - "5.12"
 install: build/install_modules.sh
 script: prove
+sudo: false
 
