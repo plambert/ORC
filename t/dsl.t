@@ -1,5 +1,4 @@
-use warnings;
-use strict;
+use Modern::Perl qw/2012/;
 use Test::More tests => 4;
 use Carp::Always;
 use Test::LongString;
