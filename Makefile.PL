@@ -2,22 +2,22 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
+  'NAME' => 'ORC',
+  'VERSION_FROM' => 'lib/ORC.pm',
+  'PREREQ_PM' => {
+                   'Carp::Always' => 0,
+                   'Modern::Perl' => 0,
+                   'Moose' => 0,
+                   'Parse::RecDescent' => 0,
+                   'Test::Continuous' => 0,
+                   'Test::LongString' => 0,
+                   'Test::More' => 0,
+                   'namespace::sweep' => 0
+                 },
+  'INSTALLDIRS' => 'site',
   'EXE_FILES' => [
                    'bin/d20.pl'
                  ],
-  'INSTALLDIRS' => 'site',
-  'PREREQ_PM' => {
-                   'namespace::sweep' => 0,
-                   'Moose' => 0,
-                   'Test::LongString' => 0,
-                   'Carp::Always' => 0,
-                   'Test::Continuous' => 0,
-                   'Parse::RecDescent' => 0,
-                   'Test::More' => 0,
-                   'Modern::Perl' => 0
-                 },
-  'VERSION_FROM' => 'lib/ORC.pm',
-  'NAME' => 'ORC',
   'PL_FILES' => {}
 )
 ;

@@ -16,19 +16,19 @@ has 'name' => (
 
 has 'value' => (
   is => 'rw',
+  predicate => 'has_value',
 );
 
-has 'is_unset' => (
-  is => 'rw',
-  isa => 'Bool',
-  default => 1,
-);
+sub BUILD {
+  my $self=shift;
+  $instance_cache->{$self->name}//=$self;
+}
 
 sub get {
   if (ref $_[0]) {
     # instance method
     my $self=shift;
-    warn "ORC: '" . $self->name . "' is unset\n" unless ($self->is_unset);
+    warn "ORC: '" . $self->name . "' is unset\n" unless ($self->has_value);
     return $self->value;
   }
   else {
@@ -43,7 +43,6 @@ sub get {
 sub set {
   my $self=shift;
   my $value=shift;
-  $self->is_unset(0);
   $self->value($value);
 }
 

@@ -1,12 +1,11 @@
 use Modern::Perl qw/2012/;
-use Test::More tests => 4;
+use Test::More tests => 3;
 use Carp::Always;
 use Test::LongString;
+use ORC;
 
 our $orc;
 
-# test loading our module at compile-time
-BEGIN { use_ok('ORC'); }
 
 my @orc_parse_tests=(
   "print 7;",
