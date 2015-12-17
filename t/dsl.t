@@ -1,5 +1,5 @@
 use Modern::Perl qw/2012/;
-use Test::More tests => 3;
+use Test::More skip_all => 'Refactoring these tests away';
 use Carp::Always;
 use Test::LongString;
 use ORC;
@@ -8,18 +8,17 @@ our $orc;
 
 
 my @orc_parse_tests=(
-  "print 7;",
-  "print 7;\n",
-  "print 1;\n\nprint 2;\n\n\n",
+  "7;",
+  "7;\n",
+  "1;\n\n2;\n\n\n",
   "c=9+3;\n",
-  "c=9+3; print c;",
-  "c=9+3;\nprint c;\n",
-  "c=9+3;y=c*2+1;print y;",
+  "c=9+3; c;",
+  "c=9+3;\n c ;\n",
+  "c=9+3;y=c*2+1; y;",
   "a=1d6;",
-  "print 1d6;",
-  "print 3d6;",
-  "print 4d6d1;",
-  "[[!]]print",
+  "1d6;",
+  "3d6;",
+  "4d6d1;",
 );
 
 my @orc_value_tests=(
