@@ -8,15 +8,19 @@ our $VERSION='0.30';
 use Moose;
 use namespace::sweep;
 use Parse::RecDescent;
+use ORC::Role::Serializable;
 use ORC::Parser;
 use ORC::Variable;
 use ORC::Statement::Assignment;
-use ORC::Statement::Print;
 # use ORC::Expression;
 use ORC::Number;
 use ORC::Operator;
+use ORC::Operator::Addition;
+use ORC::Operator::Multiplication;
+use ORC::Operator::Division;
 use ORC::Script;
 use ORC::Die;
+use ORC::Undef;
 
 has 'parser' => (
   is => 'ro',

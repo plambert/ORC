@@ -4,61 +4,41 @@ package ORC::Operator;
 
 use Modern::Perl qw/2012/;
 use namespace::sweep;
-use Moose;
+use Moose::Role;
 
-has 'operator' => (
-  is => 'rw',
-  required => 1
-);
+requires 'operator';
+requires 'do';
+
+with 'ORC::Role::Serializable';
 
 has 'arguments' => (
   is => 'rw',
   required => 1
 );
 
-sub from_parse {
-  my $self=shift;
-  my @terms;
-  @terms=@{$_[0]}; shift;
-  if (@terms < 2) {
-    return $terms[0];
+sub _call_maybe {
+  my $thing=shift;
+  my $methods='ARRAY' eq ref $_[0] ? shift : [ shift ];
+  if (!defined $thing) {
+    return ORC::Undef->singleton;
   }
-  if (@terms == 3) {
-    return __PACKAGE__->new( operator=>$terms[1], arguments=>[$terms[0], $terms[2] ] );
+  elsif (!ref $thing) {
+    return $thing;
   }
-  my @args = (shift @terms);
-  my $op = shift @terms;
-  while($terms[1] eq $op) {
-    push @args, shift @terms;
-    shift @terms;
+  while (@$methods) {
+    my $method=shift @$methods;
+    if (eval { $thing->can($method) }) {
+      return $thing->$method(@_);
+    }
   }
-  return __PACKAGE__->new( operator=>$op, arguments=>[ @args, __PACKAGE__->from_parse(@terms)] );
-  
+  return $thing;
 }
 
 sub prettyprint {
   my $self=shift;
-  return join(" " . $self->operator . " ", map { $_->prettyprint } @{$self->arguments});
+  return join(" " . $self->operator . " ", map { _call_maybe($_, ['prettyprint','value']) } @{$self->arguments});
 }
 
-sub do {
-  my $self=shift;
-  my $value;
-  my $op_fun={
-    '+' => sub { my $v=shift; $v += shift while (@_); return $v; },
-    '-' => sub { my $v=shift; $v -= shift while (@_); return $v; },
-    '*' => sub { my $v=shift; $v *= shift while (@_); return $v; },
-    '/' => sub { my $v=shift; $v /= shift while (@_); return $v; },
-  };
-  if (exists $op_fun->{$self->operator}) {
-    $value = $op_fun->{$self->operator}->(map { $_->can('do') ? $_->do : $_ } @{$self->arguments} );
-    return $value;
-  }
-  else {
-    die sprintf("%s: %s: unknown operator!", $0, $self->operator);
-  }
-}
-
-__PACKAGE__->meta->make_immutable;
+#__PACKAGE__->meta->make_immutable;
 
 1;

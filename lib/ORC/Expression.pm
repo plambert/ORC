@@ -6,6 +6,8 @@ use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
 
+with 'ORC::Role::Serializable';
+
 has 'expression' => (
   is => 'ro',
   required => 1,
