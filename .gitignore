@@ -19,4 +19,4 @@ nytprof.out
 *.bs
 RD_TRACE
 /ORC-*
-
+/.prove
