@@ -16,9 +16,11 @@ use ORC::Statement::Assignment;
 use ORC::Number;
 use ORC::Operator;
 use ORC::Operator::Addition;
+use ORC::Operator::Subtraction;
 use ORC::Operator::Multiplication;
 use ORC::Operator::Division;
 use ORC::Script;
+use ORC::RandomNumberGenerator;
 use ORC::Die;
 use ORC::Undef;
 

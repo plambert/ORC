@@ -5,7 +5,11 @@ package ORC::Die;
 use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
-use overload '""' => sub { $_[0]->prettyprint };
+use overload
+  '""' => sub { $_[0]->prettyprint },
+  'eq' => sub { $_[0]->prettyprint eq $_[1] };
+
+use ORC::RandomNumberGenerator;
 
 with 'ORC::Role::Serializable';
 
@@ -25,6 +29,7 @@ has 'previous' => (
 
 has 'raw_dice' => (
   is => 'rw',
+  isa => 'ArrayRef[HashRef]',
 );
 
 has 'total' => (
@@ -33,6 +38,7 @@ has 'total' => (
 
 has 'final_dice' => (
   is => 'rw',
+  isa => 'ArrayRef',
 );
 
 has 'removed_dice' => (
@@ -68,6 +74,24 @@ has 'open' => (
   is => 'ro',
 );
 
+around BUILDARGS => sub {
+  my $orig = shift;
+  my $class = shift;
+  my $args;
+  if ( @_ == 1 and ref $_[0] eq 'HASH' ) {
+    $args=shift @_;
+  }
+  else {
+    $args={ @_ };
+  }
+  if ($args->{raw_dice}) {
+    for (@{$args->{raw_dice}}) {
+      $_={state => 'kept', face_value=>$_, history=>[$_]} unless (ref $_);
+    }
+  }
+  return $class->$orig($args);
+};
+
 sub prettyprint {
   my $self=shift;
   my $string=sprintf("%d%s%d", $self->count, 'd', $self->pips);
@@ -81,6 +105,11 @@ sub prettyprint {
   return $string;
 }
 
+sub random {
+  my $self=shift;
+  return ORC::RandomNumberGenerator->singleton->next(@_);
+}
+
 sub do {
   my $self=shift;
   return $self->roll;
@@ -89,10 +118,9 @@ sub do {
 sub roll {
   my $self=shift;
   my $total=0;
-  $self->rollRaw unless ($self->raw_dice and @{$self->raw_dice});
-  $self->final_dice($self->raw_dice);
-  $self->dropDice if ($self->drop);
-  $self->keepDice if ($self->keep);
+  $self->roll_raw unless ($self->raw_dice and @{$self->raw_dice});
+  $self->drop_dice if ($self->drop);
+  $self->keep_dice if ($self->keep);
   $self->rerollDice if ($self->reroll);
   $self->successDice if ($self->success);
   $self->explodingsuccessDice if ($self->explodingsuccess);
@@ -105,38 +133,45 @@ sub roll {
   return $total;
 }
 
-sub rollRaw {
+sub roll_raw {
   my $self=shift;
   my @raw_dice;
   for (1..$self->count) {
-    my $singleDie=int(rand($self->pips)+1);
-    push @raw_dice, $singleDie;
+    my $single_die=$self->random(1, $self->pips);
+    #int(rand($self->pips)+1);
+    push @raw_dice, { state => 'kept', face_value => $single_die, history => [ $single_die] };
   }
   $self->raw_dice(\@raw_dice)
 }
 
-sub dropDice {
+# drop the lowest N dice
+# keeping the original order
+sub drop_dice {
   my $self = shift;
-  $self->rollRaw unless ($self->raw_dice and @{$self->raw_dice});
   my @rolled_dice=@{$self->raw_dice};
+  my @sorted_dice=sort { $a->face_value <=> $b->face_value } (@rolled_dice);
+  my @removed_dice;
+  my @indices_to_remove;
   # print STDERR Data::Dumper::Dumper($self->drop); use Data::Dumper;
   my $drop=0+$self->drop->value;
-  if (defined $drop and $drop > 0) {
+  my $indices_for={ map { ( $rolled_dice[$_]->face_value, $_ ) } (0..$#rolled_dice) };
+
+  return unless (defined $drop and $drop > 0);
   
-    my @sorted_dice=sort { $a <=> $b } (@rolled_dice);
-    my @values_to_remove=@sorted_dice[0..($drop-1)];
-    # print STDERR "rolled_dice: ", join(',', @rolled_dice), "\n";
-    # print STDERR "sorted dice: ", join(',', @sorted_dice), "\n";
-    for my $value (@values_to_remove) {
-      my $idx=0;
-      $idx++ until $rolled_dice[$idx] == $value;
-      splice(@rolled_dice, $idx, 1);
-    }
-    # print STDERR "final dice: ", join(',', @rolled_dice), "\n";
-    $self->removed_dice->{dropped}=\@values_to_remove;
+  @sorted_dice=sort { $a <=> $b } (@rolled_dice);
+
+  for my $drop_index (1..$drop) {
+    my $face_to_remove=shift @sorted_dice;
+    push @removed_dice, $face_to_remove;
+    push @indices_to_remove, shift @{$indices_for->{$face_to_remove}};
   }
+
+  for my $index (reverse sort { $a <=> $b } @indices_to_remove) {
+    splice @rolled_dice, $index, 1;
+  }
+  push @{$self->removed_dice->{dropped}}, @removed_dice;
   $self->final_dice(\@rolled_dice);
-  return $self->final_dice;
+  return $self;
 }
 
 __PACKAGE__->meta->make_immutable;

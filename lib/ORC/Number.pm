@@ -6,7 +6,7 @@ use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
 use overload 
-  '""' => sub { $_[0]->value }, 
+  '""' => \&to_string,
   '+' => sub { $_[0]->value + $_[1] },
   '*' => sub { $_[0]->value * $_[1] },
   '/' => sub { $_[2] ? $_[1] / $_[0]->value : $_[0]->value / $_[1] },
@@ -17,8 +17,36 @@ with 'ORC::Role::Serializable';
 
 has 'value' => (
   is => 'rw',
-  required => 1
+  required => 1,
 );
+
+has 'label' => (
+  is => 'rw',
+  isa => 'Maybe[Str]',
+  required => 0,
+);
+
+sub negate {
+  my $self=shift;
+  $self->value(0 - $self->value);
+  return $self;
+}
+
+sub negated_copy {
+  my $self=shift;
+  my $new=__PACKAGE__->new(value => 0-$self->value, label => $self->label );
+  return $new;
+}
+
+sub to_string {
+  my $self=shift;
+  if ($self->label) {
+    return sprintf "%d \`%s\`", $self->value, $self->label;
+  }
+  else {
+    return $self->value;
+  }
+}
 
 sub _eq {
   my $self=shift;
@@ -43,6 +71,11 @@ sub prettyprint {
 sub do {
   my $self=shift;
   return $self->value;
+}
+
+sub simplify {
+  my $self=shift;
+  return $self;
 }
 
 sub TO_JSON {

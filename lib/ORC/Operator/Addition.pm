@@ -37,7 +37,31 @@ sub from_parse {
     shift @$terms;
   }
   return __PACKAGE__->new( operator=>$op, arguments=>[ @args, __PACKAGE__->from_parse(@$terms)] );
-  
+}
+
+sub negate {
+  my $self=shift;
+  my @cannot_negate;
+  my @new_args;
+  for my $arg (@{$self->arguments}) {
+    next unless (defined $arg);
+    if ($arg->can('negate')) {
+      push @new_args, $arg->negate;
+    }
+    elsif (looks_like_number $arg) {
+      push @new_args, 0-$arg;
+    }
+    else {
+      push @cannot_negate, $arg;
+    }
+  }
+  $self->arguments(\@new_args);
+  if (@cannot_negate) {
+    return ORC::Operator::Subtraction->new(arguments => [ $self, @cannot_negate ]);
+  }
+  else {
+    return $self;
+  }
 }
 
 sub do {
@@ -45,8 +69,10 @@ sub do {
   my $value;
   my @args=@{$self->arguments};
   $value=shift @args;
+  $value=$value->do;
   while(@args) {
-    $value = $value + shift @args;
+    my $addend = shift @args;
+    $value = $value + $addend->do;
   }
   return $value;
 }

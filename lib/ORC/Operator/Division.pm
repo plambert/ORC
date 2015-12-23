@@ -31,8 +31,10 @@ sub do {
   my $value;
   my @args=@{$self->arguments};
   $value=shift @args;
+  $value=$value->do;
   while(@args) {
-    $value = $value / shift @args;
+    my $factor=shift @args;
+    $value = $value / $factor->do;
   }
   return $value;
 }
