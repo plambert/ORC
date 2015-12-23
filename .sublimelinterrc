@@ -1,0 +1,9 @@
+{
+  {
+    "linters": {
+      "perl": {
+        "include_dirs": "lib"
+      }
+    }
+  }
+}

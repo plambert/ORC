@@ -1,0 +1,5 @@
+# settings for 'prove'
+--state=hot,all,save
+--lib
+-w
+
