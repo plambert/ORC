@@ -65,7 +65,7 @@ statement:
 eos: /;\s*/ | /\n/ | /^\s*\Z/
 
 assignment_statement:
-  identifier /\s*/ equals /\s*/ expression { "ORC::Statement::Assignment"->new(variable => $item{identifier}, expression => $item{expression}) }
+  identifier /\s*/ equals /\s*/ expression { ORC::Statement::Assignment->new(variable => $item{identifier}, expression => $item{expression}) }
 
 equals: '='
 
@@ -131,24 +131,6 @@ factor: <leftop: term /([\*\/])\s*/ term>
       $return=$return->simplify;
     }
   }
-
-divisor: <leftop: term '/' term>
-  {
-    my $expressions=$item[1];
-    if (ref $expressions ne 'ARRAY') {
-      $return=$expressions;
-    }
-    elsif (@$expressions == 1) {
-      $return=$expressions->[0];
-      if (ref $return eq 'ARRAY' and @$return == 1) {
-        $return=$return->[0];
-      }
-    }
-    else {
-      $return=ORC::Operator::Division->from_parse($expressions);
-    }
-  }
-
 
 term:
   die_expression
