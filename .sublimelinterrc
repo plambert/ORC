@@ -3,8 +3,8 @@
     "linters": {
       "perl": {
         "include_dirs": [
-          "/Users/plambert/.perlbrew/libs/perl-5.23.3@plambert/lib/perl5",
-          "/Users/plambert/Dropbox/Private/d20dsl"
+          "~/.perlbrew/libs/perl-5.23.3@plambert/lib/perl5",
+          "~/Dropbox/Private/d20dsl"
         ]
       }
     }

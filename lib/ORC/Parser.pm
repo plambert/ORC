@@ -34,6 +34,40 @@ sub parse {
   return $self->parser->$method($text, $opts->{line}, @_);
 }
 
+sub expression {
+  my $class=shift @_;
+  my @item=@{shift @_};
+  if (ref $item[1] ne 'ARRAY') {
+    return $item[1];
+  }
+  elsif (@{$item[1]} == 1) {
+    my $result=$item[1]->[0];
+    while (ref $result eq 'ARRAY' and @$result == 1) {
+      $result=$result->[0];
+    }
+    return $result;
+  }
+  else {
+    my @it=@{$item[1]};
+    my $result=shift @it;
+    while(@it) {
+      my $op=shift @it;
+      my $arg=shift @it;
+      if ($op eq '-' and ref $arg and $arg->can('negate')) {
+        $op='+';
+        $arg=$arg->negate;
+      }
+      if ($op eq '+') {
+        $result=ORC::Operator::Addition->new(arguments=>[$result, $arg]);
+      }
+      elsif ($op eq '-') {
+        $result=ORC::Operator::Subtraction->new(arguments=>[$result, $arg]);
+      }
+    }
+    return $result->simplify;
+  }
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
@@ -74,34 +108,7 @@ identifier:
 
 expression: <leftop: factor /([\+\-])\s*/ factor>
   { 
-    if (ref $item[1] ne 'ARRAY') {
-      $return=$item[1];
-    }
-    elsif (@{$item[1]} == 1) {
-      $return=$item[1]->[0];
-      while (ref $return eq 'ARRAY' and @$return == 1) {
-        $return=$return->[0];
-      }
-    }
-    else {
-      my @it=@{$item[1]};
-      $return=shift @it;
-      while(@it) {
-        my $op=shift @it;
-        my $arg=shift @it;
-        if ($op eq '-' and ref $arg and $arg->can('negate')) {
-          $op='+';
-          $arg=$arg->negate;
-        }
-        if ($op eq '+') {
-          $return=ORC::Operator::Addition->new(arguments=>[$return, $arg]);
-        }
-        elsif ($op eq '-') {
-          $return=ORC::Operator::Subtraction->new(arguments=>[$return, $arg])
-        }
-      }
-      $return=$return->simplify;
-    }
+    ORC::Parser->expression(\@item);
   }
 
 factor: <leftop: term /([\*\/])\s*/ term>

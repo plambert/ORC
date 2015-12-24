@@ -30,6 +30,7 @@ has 'previous' => (
 has 'raw_dice' => (
   is => 'rw',
   isa => 'ArrayRef[HashRef]',
+  default => sub { [] },
 );
 
 has 'total' => (
@@ -39,6 +40,7 @@ has 'total' => (
 has 'final_dice' => (
   is => 'rw',
   isa => 'ArrayRef',
+  default => sub { [] },
 );
 
 has 'removed_dice' => (
@@ -107,6 +109,8 @@ sub prettyprint {
 
 sub random {
   my $self=shift;
+  my $rng=ORC::RandomNumberGenerator->singleton;
+  print STDERR "RNG: ", Dumper($rng); use Data::Dumper;
   return ORC::RandomNumberGenerator->singleton->next(@_);
 }
 
