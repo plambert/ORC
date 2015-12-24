@@ -55,7 +55,7 @@ sub do {
     if (ref $factor and ref($factor) !~ /^[A-Z]+$/) {
       $factor=$factor->do if ($factor->can('do'));
     }
-    $value = $value * $factor->do;
+    $value = $value * $factor;
   }
   return $value;
 }

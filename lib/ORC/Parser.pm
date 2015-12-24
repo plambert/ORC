@@ -154,7 +154,7 @@ term:
   die_expression
 | number
 | identifier
-| '(' <commit> expression ')' { $item[2] }
+| '(' <commit> expression ')' { $item{expression} }
 | <error>
 
 die_expression:
