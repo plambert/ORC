@@ -1,13 +1,9 @@
 language: perl
 perl:
-  - "5.22"
   - "5.20"
   - "5.18"
   - "5.16"
   - "5.14"
-matrix:
-   allow_failures:
-      - perl: "5.22"
 script: "prove -l"
 sudo: false
 notifications:
