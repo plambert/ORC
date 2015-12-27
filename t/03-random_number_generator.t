@@ -4,13 +4,14 @@ use Carp;
 use Carp::Always;
 use Test::LongString;
 use JSON;
-use ORC::RandomNumberGenerator;
+use ORC;
+use ORC::RNG::Mock;
 my $debug;
 my @r;
 
 $debug=shift @ARGV if ($ARGV[0] and $ARGV[0] =~ m{^(-d|--debug)$}i);
 
-my $tests={
+my $rng_tests={
   '01-ranges' => [
     { range => [1,100] },
     { range => [1,10000], count => 10 },
@@ -20,7 +21,13 @@ my $tests={
   ],
 };
 
-plan tests => scalar keys %$tests;
+my $dice_tests={
+  '01-simple' => [
+    { queue => [6], expression => '1d6' },
+  ],
+};
+
+plan tests => (scalar keys %$rng_tests) + (scalar keys %$dice_tests);
 
 my $json=JSON->new->allow_nonref->canonical->utf8->allow_blessed->convert_blessed;
 
@@ -86,7 +93,7 @@ sub test_rng_with_queue {
   }
 
   # handle queue entries that look like '1/6' fractions
-  $queue=[ map { m{^(\d+)/(\d+)$} ? 1.0*$1/$2 : 1.0*$_/$pips } @$queue ];
+  $queue=[ map { m{^(\d+)/(\d+)$} ? $1 : $_ } @$queue ];
   
   if ($opts->{expect}) {
     $expect=delete $opts->{expect};
@@ -104,7 +111,7 @@ sub test_rng_with_queue {
 
   #diag "queue: " . $json->encode($queue);
 
-  my $rng=ORC::RandomNumberGenerator->new({queue => $queue});
+  my $rng=ORC::RNG::Mock->new({queue => $queue});
 
   push @$result, $rng->next($pips->[$_]) for (0..$#{$expect});
 
@@ -121,13 +128,45 @@ sub test_rng_with_queue {
   return $ok;
 }
 
-for my $subtest (sort keys %$tests) {
+sub test_dice_with_queue {
+  my $test=shift;
+  my @queue=@{$test->{queue}};
+  my $expression=$test->{expression};
+  my $orc=ORC->new;
+  ORC->mock_random_numbers(@queue);
+  diag $json->encode($test->{queue});
+  while (@queue) {
+    my $expected=shift @queue;
+    my $script=$orc->parse($expression);
+    my $result;
+    if ($script and $script->can('do')) {
+      $result=$script->do;
+    }
+    else {
+      $result=$json->encode($script);
+    }
+    is($result, $expected, 'got correct value') or diag $json->encode($result);
+  }
+}
+
+for my $subtest (sort keys %$rng_tests) {
   my $subtest_name=$subtest;
   $subtest_name=~s{^\d+-}{};
-  my $subtests=$tests->{$subtest};
+  my $subtests=$rng_tests->{$subtest};
   subtest $subtest_name => sub {
     for my $test (@$subtests) {
       test_rng_with_queue($test);
+    }
+  };
+}
+
+for my $subtest (sort keys %$dice_tests) {
+  my $subtest_name=$subtest;
+  $subtest_name=~s{^\d+-}{};
+  my $subtests=$dice_tests->{$subtest};
+  subtest $subtest_name => sub {
+    for my $test (@$subtests) {
+      test_dice_with_queue($test);
     }
   };
 }

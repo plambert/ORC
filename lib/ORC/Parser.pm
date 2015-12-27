@@ -92,11 +92,10 @@ __DATA__
 start: <skip:'[ \t]*'> statement(s) /^\Z/ { ORC::Script->new(statements => $item{'statement(s)'}) }
 
 statement: 
-  /\s*/ assignment_statement <skip:''> eos <skip:$item[-3]> { $item{assignment_statement} }
-| /\s*/ expression <skip:''> eos <skip:$item[-3]> { $item{expression} }
-#| <error>
+  <skip:'[ \t]*'> assignment_statement <skip:''> eos <skip:$item[-3]> { $item{assignment_statement} }
+| <skip:'[ \t]*'> expression <skip:''> eos <skip:$item[-3]> { $item{expression} }
 
-eos: /;\s*/ | /\n/ | /^\s*\Z/
+eos: <skip:'[ \t]*'> /;\s*/ | <skip:'[ \t]*'> /^\Z/ | <skip:'[ \t]*'> /\n/ | <error>
 
 assignment_statement:
   identifier /\s*/ equals /\s*/ expression { ORC::Statement::Assignment->new(variable => $item{identifier}, expression => $item{expression}) }
@@ -155,24 +154,8 @@ die_expression:
         }
         $die->{count} = $item[2];
         $die->{pips} = $item[4];
-        $return=ORC::Die->new($die);
+        $return=ORC::DieExpression->new($die);
       }
-  #   <skip:''> number 'd' number 'd'  number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], drop => $item[6]             ) }
-  # | <skip:''> number 'd' number 'k'  number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], keep => $item[6]             ) }
-  # | <skip:''> number 'd' number 'r'  number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], reroll => $item[6]           ) }
-  # | <skip:''> number 'd' number 's'  number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], success => $item[6]          ) }
-  # | <skip:''> number 'd' number 'es' number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], explodingsuccess => $item[6] ) }
-  # | <skip:''> number 'd' number 'e'
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], explode => 1                 ) }
-  # | <skip:''> number 'd' number 'o'
-  #     { ORC::Die->new(count => $item[2], pips => $item[4], open => 1                    ) }
-  # | <skip:''> number 'd' number
-  #     { ORC::Die->new(count => $item[2], pips => $item[4]                               ) }
 
 die_expression_modifier:
     <skip:''> /d|k|r|s|es|e|o/ number <skip:$item[1]>

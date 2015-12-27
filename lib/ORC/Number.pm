@@ -8,10 +8,12 @@ use Moose;
 use overload 
   '""' => \&to_string,
   '+' => sub { $_[0]->value + $_[1] },
+  '-' => sub { $_[0]->value - $_[1] },
   '*' => sub { $_[0]->value * $_[1] },
   '/' => sub { $_[2] ? $_[1] / $_[0]->value : $_[0]->value / $_[1] },
   '0+' => sub { $_[0]->value },
-  'eq' => \&_eq;
+  'eq' => \&_eq,
+  '<=>' => \&_num_op;
 
 with 'ORC::Role::Serializable';
 
@@ -60,6 +62,21 @@ sub _eq {
   }
   else {
     return $self->value eq $other;
+  }
+}
+
+sub _num_op {
+  my $self=shift;
+  my $other=shift;
+  my $reversed=shift;
+  if (!defined $other) {
+    return;
+  }
+  elsif ($reversed) {
+    return $other <=> $self->value;
+  }
+  else {
+    return $self->value <=> $other;
   }
 }
 
