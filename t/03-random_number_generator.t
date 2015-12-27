@@ -134,7 +134,6 @@ sub test_dice_with_queue {
   my $expression=$test->{expression};
   my $orc=ORC->new;
   ORC->mock_random_numbers(@queue);
-  diag $json->encode($test->{queue});
   while (@queue) {
     my $expected=shift @queue;
     my $script=$orc->parse($expression);

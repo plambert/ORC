@@ -4,7 +4,7 @@ package ORC;
 use Modern::Perl qw/2012/;
 use Carp;
 
-our $VERSION='0.30';
+our $VERSION='0.40';
 our $RNG;
 
 use Moose;
