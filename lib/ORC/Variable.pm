@@ -7,6 +7,8 @@ use namespace::sweep;
 use Moose;
 use overload '""' => sub { $_[0]->prettyprint };
 
+with 'ORC::Role::Serializable';
+
 my $instance_cache={};
 
 has 'name' => (

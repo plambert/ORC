@@ -7,6 +7,8 @@ use namespace::sweep;
 use Moose;
 use overload '""' => sub { $_[0]->prettyprint };
 
+with 'ORC::Role::Serializable';
+
 has 'statements' => (
   is => 'rw',
   required => 1

@@ -1,0 +1,12 @@
+{
+  {
+    "linters": {
+      "perl": {
+        "include_dirs": [
+          "~/.perlbrew/libs/perl-5.23.3@plambert/lib/perl5",
+          "~/Dropbox/Private/d20dsl/lib"
+        ]
+      }
+    }
+  }
+}

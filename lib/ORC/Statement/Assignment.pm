@@ -6,6 +6,8 @@ use Modern::Perl qw/2012/;
 use namespace::sweep;
 use Moose;
 
+with 'ORC::Role::Serializable';
+
 has 'variable' => (
   is => 'rw',
   required => 1,
@@ -29,6 +31,15 @@ sub prettyprint {
 sub do {
   my $self=shift;
   $self->variable->value($self->expression->do);
+}
+
+sub TO_JSON {
+  my $self=shift;
+  my $data={ _class => [$self->meta->linearized_isa] };
+  for my $attr ($self->meta->get_all_attributes) {
+    $data->{$attr}=$self->$attr;
+  }
+  return $data;
 }
 
 __PACKAGE__->meta->make_immutable;
