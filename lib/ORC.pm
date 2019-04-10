@@ -17,7 +17,6 @@ use ORC::Role::RNG;
 use ORC::Parser;
 use ORC::Variable;
 use ORC::Statement::Assignment;
-# use ORC::Expression;
 use ORC::Operator;
 use ORC::Operator::Addition;
 use ORC::Operator::Subtraction;
