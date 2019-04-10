@@ -4,5 +4,11 @@
 		{
 			"path": "."
 		}
-	]
+	],
+  "settings": {
+    "SublimeLinter.linters.perl.include_dirs": [
+      "~/Library/Perlbrew/perls/perl-5.28.1/bin/perl", 
+      "~/Documents/src/ORC/lib"
+    ]
+  }
 }
