@@ -1,4 +1,0 @@
-hello=7;
-goodbye=9;
-print hello + goodbye;
-
