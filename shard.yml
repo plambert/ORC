@@ -1,0 +1,15 @@
+name: ORC
+version: 0.1.0
+
+authors:
+  - Paul M. Lambert <plambert@plambert.net>
+
+targets:
+  ORC:
+    main: src/ORC.cr
+
+crystal: 0.31.1
+
+license: MIT
+
+#dependencies:
